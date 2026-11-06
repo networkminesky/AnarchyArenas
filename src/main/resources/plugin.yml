@@ -1,0 +1,28 @@
+name: AnarchyArenas
+version: '${version}'
+
+main: anarchy.minesky.arenas.AnarchyArenas
+api-version: '26.3'
+load: POSTWORLD
+folia-supported: true
+
+depend:
+  - WorldEdit
+softdepend:
+  - AnarchyCore
+
+authors: [ Bruno C. ]
+
+commands:
+  aa:
+    description: Anarchy Arenas admin
+    usage: /<command> [create|setmode|delete|reload]
+    aliases: [ anarchyarenas ]
+
+permissions:
+  anarchyarenas.admin:
+    description: Criar e gerir arenas
+    default: op
+  anarchyarenas.admin.bypass:
+    description: Ignorar regras de bloco em criativo (opcional)
+    default: false

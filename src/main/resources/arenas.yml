@@ -1,0 +1,14 @@
+# Dados das arenas e blocos colocados (para limpeza após reboot)
+#
+# definitions.<nome>:
+#   world: <uuid>
+#   min/max: inteiros de bloco (inclusive)
+#   mode: CPVP | TRADITIONAL | ALL_BLOCKS
+#   restore-mode: PER_BLOCK_TIMER | RESET_ON_EMPTY
+#   per-block-seconds: (apenas PER_BLOCK_TIMER)
+#
+# placed-blocks.<nome>: lista "worldUuid|x|y|z" dos blocos ainda não restaurados
+
+definitions: {}
+
+placed-blocks: {}

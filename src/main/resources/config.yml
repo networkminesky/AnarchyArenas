@@ -1,0 +1,56 @@
+# AnarchyArenas — mensagens e listas (MiniMessage: use &#RRGGBB ou <gradient>)
+messages:
+  prefix: "<gray>[<gradient:#FF5555:#FFAA00>AnarchyArenas</gradient><gray>] "
+  arena-enter: "<gradient:#FF5555:#FFAA00>Entrou na arena</gradient> <white>%arena% <gray>(<yellow>%mode%</yellow>)"
+  arena-exit: "<gradient:#55FF55:#AAFF00>Saiu da arena</gradient> <white>%arena%"
+  no-permission: "<red>Sem permissão."
+  player-only: "<red>Apenas jogadores."
+  invalid-usage: "<yellow>Uso: <gray>%usage%"
+  arena-exists: "<red>Já existe uma arena com esse nome."
+  arena-overlap: "<red>A seleção cruza outra arena existente."
+  arena-not-found: "<red>Arena não encontrada."
+  worldedit-required: "<red>WorldEdit não está carregado."
+  no-selection: "<red>Selecione uma região com WorldEdit (//pos1 / //pos2)."
+  invalid-mode: "<red>Modo inválido. Use CPVP, TRADITIONAL ou ALL_BLOCKS."
+  create-success: "<green>Arena <white>%arena% <green>criada com modo <yellow>%mode%<green>."
+  setmode-success: "<green>Modo da arena <white>%arena% <green>alterado para <yellow>%mode%<green>."
+  delete-success: "<green>Arena <white>%arena% <green>removida."
+  reload-success: "<green>Configurações recarregadas."
+  core-dialog-unavailable: "<yellow>AnarchyCore não disponível — use o comando com argumentos."
+
+# Som quando um bloco temporário expira (fallback; UI usa AnarchyCore)
+block-decay-sound: BLOCK_FIRE_EXTINGUISH
+block-decay-volume: 0.35
+block-decay-pitch: 1.15
+
+# Partícula ao remover bloco no modo PER_BLOCK_TIMER
+block-decay-particle: CLOUD
+block-decay-particle-count: 12
+
+# Padrão para novas arenas (comando /aa create); cada arena pode sobrescrever em arenas.yml
+default-restore-mode: RESET_ON_EMPTY
+default-per-block-seconds: 30
+
+# MODO CPVP — blocos/itens permitidos para COLOCAR (IDs do Material Bukkit)
+cpvp-allowed-place:
+  - OBSIDIAN
+  - RESPAWN_ANCHOR
+  # GLOWSTONE — recarga de âncora (clique), não colocação como bloco; tratado no código
+  - COBWEB
+  - END_CRYSTAL
+
+# TRADITIONAL — itens de interação com bloco/liquido bloqueados
+traditional-blocked-items:
+  - WATER_BUCKET
+  - LAVA_BUCKET
+  - POWDER_SNOW_BUCKET
+  - MILK_BUCKET
+  - COD_BUCKET
+  - SALMON_BUCKET
+  - TROPICAL_FISH_BUCKET
+  - PUFFERFISH_BUCKET
+  - AXOLOTL_BUCKET
+  - TADPOLE_BUCKET
+  - FLINT_AND_STEEL
+  - FIRE_CHARGE
+  - END_CRYSTAL
