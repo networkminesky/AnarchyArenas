@@ -2,14 +2,8 @@ package anarchy.minesky.arenas;
 
 import anarchy.minesky.arenas.arena.ArenaDefinition;
 import anarchy.minesky.arenas.command.AaCommand;
-import anarchy.minesky.arenas.listener.BlockArenaListener;
-import anarchy.minesky.arenas.listener.PlayerMoveArenaListener;
-import anarchy.minesky.arenas.manager.ArenaRegistry;
-import anarchy.minesky.arenas.manager.ArenaSessionManager;
-import anarchy.minesky.arenas.manager.ArenaYamlIO;
-import anarchy.minesky.arenas.manager.BlockTrackManager;
-import anarchy.minesky.arenas.manager.MaterialLists;
-import anarchy.minesky.arenas.manager.Messages;
+import anarchy.minesky.arenas.listener.*;
+import anarchy.minesky.arenas.manager.*;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -22,6 +16,7 @@ public final class AnarchyArenas extends JavaPlugin {
     private MaterialLists materialLists;
     private final ArenaRegistry registry = new ArenaRegistry();
     private BlockTrackManager blockTrack;
+    private ArenaSchematicManager schem;
     private final ArenaSessionManager session = new ArenaSessionManager();
     private PlayerMoveArenaListener moveListener;
     private ScheduledTask tickTask;
@@ -39,6 +34,8 @@ public final class AnarchyArenas extends JavaPlugin {
         }
         this.blockTrack = new BlockTrackManager(this, af);
 
+        this.schem =  new ArenaSchematicManager(this);
+
         reloadAll();
 
         AaCommand cmd = new AaCommand(this);
@@ -50,8 +47,12 @@ public final class AnarchyArenas extends JavaPlugin {
         this.moveListener = new PlayerMoveArenaListener(this);
         Bukkit.getPluginManager().registerEvents(moveListener, this);
         Bukkit.getPluginManager().registerEvents(new BlockArenaListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new ArenaEntityListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerDeathArenaListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new ArenaFluidListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new ArenaRedstoneListener(this), this);
 
-        tickTask = Bukkit.getGlobalRegionScheduler().runAtFixedRate(this, task -> blockTrack.tick(), 1L, 1L);
+        tickTask = Bukkit.getGlobalRegionScheduler().runAtFixedRate(this, task -> blockTrack.tick(), 10L, 10L);
 
         getLogger().info("AnarchyArenas habilitado — Folia/regiões.");
     }
@@ -115,5 +116,13 @@ public final class AnarchyArenas extends JavaPlugin {
 
     public int defaultPerBlockSeconds() {
         return getConfig().getInt("default-per-block-seconds", 30);
+    }
+
+    public boolean defaultKeepInventory() {
+        return getConfig().getBoolean("default-keep-inventory", true);
+    }
+
+    public ArenaSchematicManager schematicManager() {
+        return this.schem;
     }
 }

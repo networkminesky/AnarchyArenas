@@ -10,13 +10,15 @@ public final class ArenaDefinition {
     private final ArenaMode mode;
     private final RestoreMode restoreMode;
     private final int perBlockSeconds;
+    private final boolean keepInventory;
 
-    public ArenaDefinition(String id, Cuboid cuboid, ArenaMode mode, RestoreMode restoreMode, int perBlockSeconds) {
+    public ArenaDefinition(String id, Cuboid cuboid, ArenaMode mode, RestoreMode restoreMode, int perBlockSeconds, boolean keepInventory) {
         this.id = id;
         this.cuboid = cuboid;
         this.mode = mode;
         this.restoreMode = restoreMode;
         this.perBlockSeconds = Math.max(1, perBlockSeconds);
+        this.keepInventory = keepInventory;
     }
 
     public String id() {
@@ -39,7 +41,15 @@ public final class ArenaDefinition {
         return perBlockSeconds;
     }
 
+    public boolean keepInventory() {
+        return keepInventory;
+    }
+
     public ArenaDefinition withMode(ArenaMode newMode) {
-        return new ArenaDefinition(id, cuboid, newMode, restoreMode, perBlockSeconds);
+        return new ArenaDefinition(id, cuboid, newMode, restoreMode, perBlockSeconds, keepInventory);
+    }
+
+    public ArenaDefinition withKeepInventory(boolean v) {
+        return new ArenaDefinition(id, cuboid, mode, restoreMode, perBlockSeconds, v);
     }
 }

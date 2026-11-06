@@ -30,6 +30,7 @@ block-decay-particle-count: 12
 # Padrão para novas arenas (comando /aa create); cada arena pode sobrescrever em arenas.yml
 default-restore-mode: RESET_ON_EMPTY
 default-per-block-seconds: 30
+default-keep-inventory: true
 
 # MODO CPVP — blocos/itens permitidos para COLOCAR (IDs do Material Bukkit)
 cpvp-allowed-place:

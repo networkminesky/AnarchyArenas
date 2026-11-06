@@ -154,6 +154,40 @@ public final class AaCommand implements CommandExecutor, TabCompleter {
                 sender.sendMessage(plugin.messages().prefixed("reload-success", Map.of()));
                 return true;
             }
+            case "restore" -> {
+                if (!sender.hasPermission("anarchyarenas.admin")) return true;
+                if (args.length < 2) {
+                    sender.sendMessage("§cUse: /aa restore <arena>");
+                    return true;
+                }
+                ArenaDefinition def = plugin.registry().get(args[1]);
+                if (def == null) {
+                    sender.sendMessage("§cArena não encontrada!");
+                    return true;
+                }
+                boolean ok = plugin.schematicManager().restoreSnapshot(def);
+                if (ok) {
+                    sender.sendMessage("§aArena " + def.id() + " restaurada com sucesso a partir do Schematic!");
+                } else {
+                    sender.sendMessage("§cArena não possui schematic salvo! Use /aa saveschem <arena> primeiro.");
+                }
+                return true;
+            }
+            case "saveschem" -> {
+                if (!sender.hasPermission("anarchyarenas.admin")) return true;
+                if (args.length < 2) {
+                    sender.sendMessage("§cUse: /aa saveschem <arena>");
+                    return true;
+                }
+                ArenaDefinition def = plugin.registry().get(args[1]);
+                if (def == null) {
+                    sender.sendMessage("§cArena não encontrada!");
+                    return true;
+                }
+                plugin.schematicManager().saveSnapshot(def);
+                sender.sendMessage("§aNovo Snapshot da arena " + def.id() + " salvo com sucesso!");
+                return true;
+            }
             default -> {
                 sendUsage(sender);
                 return true;
@@ -205,8 +239,10 @@ public final class AaCommand implements CommandExecutor, TabCompleter {
             restore = RestoreMode.RESET_ON_EMPTY;
         }
         int timerSec = plugin.defaultPerBlockSeconds();
-        ArenaDefinition def = new ArenaDefinition(name, cuboid, mode, restore, timerSec);
+        boolean keepInv = plugin.defaultKeepInventory();
+        ArenaDefinition def = new ArenaDefinition(name, cuboid, mode, restore, timerSec, keepInv);
         plugin.registry().register(def);
+        plugin.schematicManager().saveSnapshot(def);
         plugin.blockTrack().flushSync();
         playSuccess(player);
         Map<String, String> r = new HashMap<>();
@@ -226,6 +262,7 @@ public final class AaCommand implements CommandExecutor, TabCompleter {
         MineSkyDialog.Builder b = dialogApi.createDialog("&#FFDD77Criar arena")
                 .body("&#C7C7C7Use a seleção ativa do &#FFDD77WorldEdit&#C7C7C7 (//pos1/2) e preencha abaixo.")
                 .multiActionColumns(1)
+                .boolInput("keep_inventory", "Manter inventário ao morrer na arena", plugin.defaultKeepInventory())
                 .boolInput("block_if_overlap", "Bloquear se a seleção cruzar outra arena", true)
                 .textInput("name", "Nome da arena", "ex: spawn_cpvp", "")
                 .dropdownInput("mode", "Modo", dd -> dd
@@ -267,6 +304,7 @@ public final class AaCommand implements CommandExecutor, TabCompleter {
         }
         int timer = Math.max(1, Math.round(response.getFloat("timer_sec", plugin.defaultPerBlockSeconds())));
         boolean checkOverlap = response.getBoolean("block_if_overlap", true);
+        boolean keepInv = response.getBoolean("keep_inventory", plugin.defaultKeepInventory());
 
         if (plugin.registry().get(name) != null) {
             UiSoundsAPI.error(player);
@@ -291,7 +329,7 @@ public final class AaCommand implements CommandExecutor, TabCompleter {
             player.sendMessage(plugin.messages().message("arena-overlap", Map.of()));
             return;
         }
-        ArenaDefinition def = new ArenaDefinition(name, cuboid, mode, restore, timer);
+        ArenaDefinition def = new ArenaDefinition(name, cuboid, mode, restore, timer, keepInv);
         plugin.registry().register(def);
         plugin.blockTrack().flushSync();
         UiSoundsAPI.success(player);
@@ -327,9 +365,9 @@ public final class AaCommand implements CommandExecutor, TabCompleter {
             return List.of();
         }
         if (args.length == 1) {
-            return partial(List.of("create", "setmode", "delete", "reload"), args[0]);
+            return partial(List.of("create", "setmode", "delete", "reload", "restore", "saveschem"), args[0]);
         }
-        if (args.length == 2 && (args[0].equalsIgnoreCase("setmode") || args[0].equalsIgnoreCase("delete"))) {
+        if (args.length == 2 && (args[0].equalsIgnoreCase("setmode") || args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("saveschem") || args[0].equalsIgnoreCase("restore"))) {
             List<String> names = new ArrayList<>();
             for (ArenaDefinition def : plugin.registry().all()) {
                 names.add(def.id());

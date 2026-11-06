@@ -6,9 +6,13 @@
 #   mode: CPVP | TRADITIONAL | ALL_BLOCKS
 #   restore-mode: PER_BLOCK_TIMER | RESET_ON_EMPTY
 #   per-block-seconds: (apenas PER_BLOCK_TIMER)
+#   keep-inventory: manter inventário ao morrer na arena
 #
 # placed-blocks.<nome>: lista "worldUuid|x|y|z" dos blocos ainda não restaurados
+# placed-crystals.<nome>: lista de UUID de EnderCrystal colocados
 
 definitions: {}
 
 placed-blocks: {}
+
+placed-crystals: {}

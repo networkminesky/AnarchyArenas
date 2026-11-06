@@ -119,12 +119,19 @@ public final class BlockArenaListener implements Listener {
         if (def == null) {
             return;
         }
+
+        // Bloqueia baldes em CPVP
+        if (def.mode() == ArenaMode.CPVP && event.getMaterial().name().endsWith("_BUCKET")) {
+            event.setCancelled(true);
+            return;
+        }
+
         if (def.mode() == ArenaMode.CPVP) {
             if (event.getMaterial() == Material.GLOWSTONE) {
                 if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                     Block clicked = event.getClickedBlock();
                     if (clicked != null && clicked.getType() == Material.RESPAWN_ANCHOR) {
-                        return;
+                        return; // Permite recarregar a âncora
                     }
                 }
                 event.setCancelled(true);
@@ -135,16 +142,13 @@ public final class BlockArenaListener implements Listener {
             }
             return;
         }
+
         if (def.mode() != ArenaMode.TRADITIONAL) {
             return;
         }
         Material mat = event.getMaterial();
         MaterialLists lists = plugin.materialLists();
-        if (lists.isTraditionalBlockedItem(mat)) {
-            event.setCancelled(true);
-            return;
-        }
-        if (mat == Material.FLINT_AND_STEEL || mat == Material.FIRE_CHARGE) {
+        if (lists.isTraditionalBlockedItem(mat) || mat == Material.FLINT_AND_STEEL || mat == Material.FIRE_CHARGE) {
             event.setCancelled(true);
             return;
         }
