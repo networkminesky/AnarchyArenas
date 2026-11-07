@@ -21,6 +21,7 @@ import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EnderCrystal;
 import org.bukkit.entity.Entity;
 
@@ -125,7 +126,7 @@ public final class ArenaSchematicManager {
                 Bukkit.getRegionScheduler().execute(plugin, world, fcx, fcz, () -> {
                     if (!world.isChunkLoaded(fcx, fcz)) return;
                     for (Entity entity : world.getChunkAt(fcx, fcz).getEntities()) {
-                        if (entity instanceof EnderCrystal && cuboid.contains(entity.getLocation())) {
+                        if (entity instanceof EnderCrystal || entity instanceof ArmorStand && cuboid.contains(entity.getLocation())) {
                             entity.getScheduler().run(plugin, task -> entity.remove(), null);
                         }
                     }
